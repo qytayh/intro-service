@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "esModuleInterop":true,
+    "module": "commonjs",
+    "target": "esnext",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "src/types/*",
+        "src/routes/*",
+        "src/model/*",
+        "src/controller/*",
+        "src/middle/*",
+        "src/config/*",
+        "src/service/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "server.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
