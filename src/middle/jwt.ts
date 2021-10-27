@@ -2,7 +2,7 @@ const jsonwebtoken = require("jsonwebtoken");
 const { config } = require("../config");
 const jwt = require("koa-jwt");
 
-import * as Koa from "koa";
+import Rp from "./response";
 
 const { JWT_EXPIRED, SECRET } = config;
 
@@ -23,7 +23,7 @@ export const verifyToken = (token: string) => {
 };
 
 export const initJwt = (app: IApp) => {
-  app.use((ctx: Koa.Context, next: any) => {
+  app.use((ctx: IContext, next: any) => {
     if (ctx.header && ctx.header.authorization) {
       const parts = ctx.header.authorization.split(" ");
       if (parts.length === 2) {
@@ -42,10 +42,7 @@ export const initJwt = (app: IApp) => {
             // ctx.res.setHeader('Authorization', newToken);
             // ctx.throw(401, err.message);
             ctx.status = 401;
-            ctx.body = {
-              code: 0,
-              msg: "登陆失效",
-            };
+            ctx.body = Rp.fail("登录过期",401)
           }
         }
       }

@@ -3,14 +3,14 @@ export default class Rp {
     return {
       code: 200,
       data,
-      message: "success",
+      msg: "success",
     };
   }
 
-  static fail(message: string) {
+  static fail(msg: string,code=500) {
     return {
-      code: 500,
-      message,
+      code,
+      msg,
     };
   }
 }

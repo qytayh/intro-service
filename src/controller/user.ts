@@ -7,7 +7,6 @@ import {
   security,
 } from "koa-swagger-decorator";
 import UserService from "../service/user";
-import * as Koa from "koa";
 import { IUser, UserModel } from "../model/User";
 import Rp from "../middle/response";
 import { createToken } from "../middle/jwt";
@@ -35,28 +34,21 @@ export default class User {
   @summary("登录")
   @tag
   @body(loginForm)
-  static async login(ctx: Koa.Context) {
+  static async login(ctx: IContext) {
     const user: IUser = ctx.request.body;
     if (user.phone && user.password) {
-      await UserModel.findOne(
-        { phone: user.phone },
-        (err: any, docs: Record<string, any>) => {
-          if (err) {
-            ctx.body = Rp.fail("用户名不存在");
-            return;
-          }
-          if (docs.password !== user.password) {
-            ctx.body = Rp.fail("用户名密码不匹配");
-            return;
-          }
-          const { _id, username, role } = docs;
-          const token = createToken({ _id, username, role });
-          ctx.body = Rp.success({
-            token,
-            username,
-          });
-        }
-      );
+      const res:any = await UserModel.findOne({ phone: user.phone });
+      if (!res._id) {
+        ctx.body = Rp.fail("用户名不存在");
+        return;
+      }
+      if (res.password !== user.password) {
+        ctx.body = Rp.fail("用户名密码不匹配");
+        return;
+      }
+      const { _id, username, role } = res;
+      const token = createToken({ _id, username, role });
+      ctx.body = Rp.success({ token })
     }
   }
 
@@ -64,7 +56,7 @@ export default class User {
   @summary("创建用户")
   @security([{ authorization: [] }])
   @tag
-  static async create(ctx: Koa.Context) {
+  static async create(ctx: IContext) {
     const user: IUser = ctx.request.body;
     const res = await UserService.create(user);
     ctx.body = res;

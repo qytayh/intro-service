@@ -4,12 +4,11 @@ const json = require("koa-json");
 const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const loadRouter = require("./routes/index");
-const { config } = require("./config");
 import { initJwt } from "./middle/jwt";
 const cors = require("koa2-cors");
 import { dbInit } from "./middle/db";
 
-app.use(cors());
+app.use(cors({origin: '*',}));
 
 initJwt(app);
 
